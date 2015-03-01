@@ -15,6 +15,15 @@ class Logs extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('logs/index', $data);
         $this->load->view('templates/footer');
+    }    
+
+    public function history($type='json')
+    {
+        if($type='json') {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($this->logs_model->get_last_day()));
+        }
     }
 
 }
