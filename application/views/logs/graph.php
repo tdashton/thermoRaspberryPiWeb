@@ -10,13 +10,6 @@ $(function () {
 
   var jqxhr = $.ajax( "/~tashton/thermoRaspberryPi/index.php/logs/history/json" )
     .done(function(retData) {
-      $(retData).each(function(index, value) {
-        $(value.dataPoints).each(
-          function(index, value) {
-            value.x = new Date(value.x);
-            console.log(value.x);
-          });
-      });
       $("#chartContainer").CanvasJSChart({ //Pass chart options
         data: retData
       });

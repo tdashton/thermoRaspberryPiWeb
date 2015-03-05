@@ -31,23 +31,24 @@ class Logs_model extends CI_Model {
 
     public function get_last_day()
     {
-        $query = $this->db->query('select l.value / 1000 as value, datetime from logs l inner join sensors s 
+        $query = $this->db->query('select l.value / 1000 as value, UNIX_TIMESTAMP(datetime) * 1000 as datetime from logs l inner join sensors s 
             on (s.name = l.fk_sensor) where datetime > date_sub(now(), interval 24 hour) and s.description= \'draussen\' 
             order by datetime desc');
         $resReturn = array();
 
         $dataset = new stdClass();
         $dataset->type = 'line';
+        $dataset->xValueType = "dateTime";
         $dataset->dataPoints = array();
+
         $resultArray = $query->result_array();
         $count = count($resultArray);
         for($i = 0; $i < $count; $i++) {
-            $dateTimeConvert = new DateTime($resultArray[$i]['datetime']);
-            array_push($dataset->dataPoints, array('x' => $dateTimeConvert->format(DateTime::ATOM), 'y' => (float)$resultArray[$i]['value']));
+            array_push($dataset->dataPoints, array('x' => (double)$resultArray[$i]['datetime'], 'y' => (float)$resultArray[$i]['value']));
         }
         array_push($resReturn, $dataset);
 
-        $query = $this->db->query('select l.value / 1000 as value, datetime from logs l inner join sensors s 
+        $query = $this->db->query('select l.value / 1000 as value, UNIX_TIMESTAMP(datetime) * 1000 as datetime from logs l inner join sensors s 
             on (s.name = l.fk_sensor) where datetime > date_sub(now(), interval 24 hour) and s.description= \'drinnen\' 
             order by datetime desc');
         $dataset = new stdClass();
@@ -56,8 +57,7 @@ class Logs_model extends CI_Model {
         $resultArray = $query->result_array();
         $count = count($resultArray);
         for($i = 0; $i < $count; $i++) {
-            $dateTimeConvert = new DateTime($resultArray[$i]['datetime']);
-            array_push($dataset->dataPoints, array('x' => $dateTimeConvert->format(DateTime::ATOM), 'y' => (float)$resultArray[$i]['value']));
+            array_push($dataset->dataPoints, array('x' => (double)$resultArray[$i]['datetime'], 'y' => (float)$resultArray[$i]['value']));
         }
         array_push($resReturn, $dataset);
 
