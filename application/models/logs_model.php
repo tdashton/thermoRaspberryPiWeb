@@ -17,6 +17,7 @@ class Logs_model extends CI_Model {
             $this->db->select('value / 1000 as value, datetime, fk_sensor, description');
             $this->db->from('logs');
             $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
+            $this->db->where('datetime > date_sub(now(), interval 1 minute)');
             $this->db->order_by('datetime', 'DESC');
             $this->db->order_by('fk_sensor', 'DESC');
             $this->db->limit(2);
