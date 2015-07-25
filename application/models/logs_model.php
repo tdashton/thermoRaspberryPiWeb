@@ -1,6 +1,9 @@
 <?php
 class Logs_model extends CI_Model {
 
+    const FK_SENSOR_INSIDE = '10-000802bcf635';
+    const FK_SENSOR_OUTSIDE = '10-000802bcf635';
+
     public function __construct()
     {
         $this->load->database();
