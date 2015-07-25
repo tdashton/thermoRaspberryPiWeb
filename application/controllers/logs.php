@@ -27,10 +27,19 @@ class Logs extends CI_Controller {
 
     public function history($type='json')
     {
+        $start = $this->input->post('start');
+        $end = $this->input->post('end');
+        if($start !== false) {
+            $start = preg_replace('#/#', '-', $start);
+        }
+        if($end !== false) {
+            $end = preg_replace('#/#', '-', $end);
+        }
+
         if($type='json') {
             $this->output
                 ->set_content_type('application/json')
-                ->set_output(json_encode($this->logs_model->get_last_day()));
+                ->set_output(json_encode($this->logs_model->get_history($start, $end)));
         }
     }
 

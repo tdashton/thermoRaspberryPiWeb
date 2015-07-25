@@ -1,8 +1,8 @@
 <?php
 class Logs_model extends CI_Model {
 
-    const FK_SENSOR_INSIDE = '10-000802bcf635';
-    const FK_SENSOR_OUTSIDE = '10-000802bcf635';
+    const NAME_SENSOR_INSIDE = '10-000802b5535b';
+    const NAME_SENSOR_OUTSIDE = '10-000802bcf635';
 
     public function __construct()
     {
@@ -33,11 +33,19 @@ class Logs_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function get_last_day()
+    public function get_history($start, $end)
     {
-        $query = $this->db->query('select l.value / 1000 as value, UNIX_TIMESTAMP(datetime) * 1000 as datetime from logs l inner join sensors s 
-            on (s.name = l.fk_sensor) where datetime > date_sub(now(), interval 24 hour) and s.description= \'draussen\' 
-            order by datetime desc');
+        $this->db->select('logs.value / 1000 as value, UNIX_TIMESTAMP(logs.datetime) * 1000 as datetime');
+        $this->db->from('logs');
+        $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
+        if($start && $end) {
+            $this->db->where('datetime > ', $start);
+            $this->db->where('datetime < ', $end);
+        } else {
+            $this->db->where('datetime > date_sub(now(), interval 24 hour)');
+        }
+        $this->db->where('sensors.name', self::NAME_SENSOR_OUTSIDE);
+        $this->db->order_by('datetime', 'desc');
         $resReturn = array();
 
         $dataset = new stdClass();
@@ -45,6 +53,7 @@ class Logs_model extends CI_Model {
         $dataset->xValueType = "dateTime";
         $dataset->dataPoints = array();
 
+        $query = $this->db->get();
         $resultArray = $query->result_array();
         $count = count($resultArray);
         for($i = 0; $i < $count; $i++) {
@@ -52,12 +61,24 @@ class Logs_model extends CI_Model {
         }
         array_push($resReturn, $dataset);
 
-        $query = $this->db->query('select l.value / 1000 as value, UNIX_TIMESTAMP(datetime) * 1000 as datetime from logs l inner join sensors s 
-            on (s.name = l.fk_sensor) where datetime > date_sub(now(), interval 24 hour) and s.description= \'drinnen\' 
-            order by datetime desc');
+        $this->db->select('logs.value / 1000 as value, UNIX_TIMESTAMP(logs.datetime) * 1000 as datetime');
+        $this->db->from('logs');
+        $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
+        if($start && $end) {
+            $this->db->where('datetime > ', $start);
+            $this->db->where('datetime < ', $end);
+        } else {
+            $this->db->where('datetime > date_sub(now(), interval 24 hour)');
+        }
+        $this->db->where('sensors.name', self::NAME_SENSOR_INSIDE);
+        $this->db->order_by('datetime', 'desc');
+
         $dataset = new stdClass();
         $dataset->type = 'line';
+        // $dataset->xValueType = "dateTime";
         $dataset->dataPoints = array();
+
+        $query = $this->db->get();
         $resultArray = $query->result_array();
         $count = count($resultArray);
         for($i = 0; $i < $count; $i++) {
