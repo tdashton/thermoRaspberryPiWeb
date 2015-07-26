@@ -7,14 +7,30 @@ class Logs extends CI_Controller {
         $this->load->model('logs_model');
     }
 
+    /**
+     * Index Page for this controller.
+     *
+     * Maps to the following URL
+     *      http://example.com/index.php/logs
+     *  - or -
+     *      http://example.com/index.php/logs/index
+     *  - or -
+     * Since this controller is set as the default controller in
+     * config/routes.php, it's displayed at http://example.com/
+     *
+     * So any other public methods not prefixed with an underscore will
+     * map to /index.php/logs/<method_name>
+     * @see http://codeigniter.com/user_guide/general/urls.html
+     */
     public function index()
     {
+        log_message('info', 'The purpose of some variable is to provide some value.');
         $data['logs'] = $this->logs_model->get_current();
         $data['averages'] = $this->logs_model->get_last_day_average();
         $this->load->view('templates/header', $data);
         $this->load->view('logs/index', $data);
         $this->load->view('templates/footer');
-    }    
+    }
 
     public function graph()
     {

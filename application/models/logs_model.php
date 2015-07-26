@@ -51,6 +51,8 @@ class Logs_model extends CI_Model {
         $dataset = new stdClass();
         $dataset->type = 'line';
         $dataset->xValueType = "dateTime";
+        // $dataset->showInLegend = true;
+        // $dataset->name = "Draussen";
         $dataset->dataPoints = array();
 
         $query = $this->db->get();
@@ -75,7 +77,9 @@ class Logs_model extends CI_Model {
 
         $dataset = new stdClass();
         $dataset->type = 'line';
-        // $dataset->xValueType = "dateTime";
+        $dataset->xValueType = "dateTime";
+        // $dataset->showInLegend = true;
+        // $dataset->name = 'Drinnen';
         $dataset->dataPoints = array();
 
         $query = $this->db->get();
