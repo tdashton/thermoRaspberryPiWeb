@@ -35,19 +35,13 @@ class Logs_model extends CI_Model {
 
     public function get_history($start, $end)
     {
-        $this->db->select('logs.value / 1000 as value, UNIX_TIMESTAMP(logs.datetime) * 1000 as datetime');
-        $this->db->from('logs');
-        $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
-        if($start && $end) {
-            $this->db->where('datetime > ', $start);
-            $this->db->where('datetime < ', $end);
-        } else {
-            $this->db->where('datetime > date_sub(now(), interval 24 hour)');
-        }
-        $this->db->where('sensors.name', self::NAME_SENSOR_OUTSIDE);
-        $this->db->order_by('datetime', 'desc');
+
+        /**
+         * @var $resReturn initialize the return array
+         */
         $resReturn = array();
 
+        // get first dataset
         $dataset = new stdClass();
         $dataset->type = 'line';
         $dataset->xValueType = "dateTime";
@@ -55,26 +49,15 @@ class Logs_model extends CI_Model {
         // $dataset->name = "Draussen";
         $dataset->dataPoints = array();
 
-        $query = $this->db->get();
-        $resultArray = $query->result_array();
+        $resultArray = $this->get_logs_for_sensor(self::NAME_SENSOR_OUTSIDE, $start, $end);
         $count = count($resultArray);
         for($i = 0; $i < $count; $i++) {
             array_push($dataset->dataPoints, array('x' => (double)$resultArray[$i]['datetime'], 'y' => (float)$resultArray[$i]['value']));
         }
         array_push($resReturn, $dataset);
 
-        $this->db->select('logs.value / 1000 as value, UNIX_TIMESTAMP(logs.datetime) * 1000 as datetime');
-        $this->db->from('logs');
-        $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
-        if($start && $end) {
-            $this->db->where('datetime > ', $start);
-            $this->db->where('datetime < ', $end);
-        } else {
-            $this->db->where('datetime > date_sub(now(), interval 24 hour)');
-        }
-        $this->db->where('sensors.name', self::NAME_SENSOR_INSIDE);
-        $this->db->order_by('datetime', 'desc');
-
+        // get second dataset
+        $resultArray = $this->get_logs_for_sensor(self::NAME_SENSOR_INSIDE, $start, $end);
         $dataset = new stdClass();
         $dataset->type = 'line';
         $dataset->xValueType = "dateTime";
@@ -82,8 +65,6 @@ class Logs_model extends CI_Model {
         // $dataset->name = 'Drinnen';
         $dataset->dataPoints = array();
 
-        $query = $this->db->get();
-        $resultArray = $query->result_array();
         $count = count($resultArray);
         for($i = 0; $i < $count; $i++) {
             array_push($dataset->dataPoints, array('x' => (double)$resultArray[$i]['datetime'], 'y' => (float)$resultArray[$i]['value']));
@@ -92,4 +73,27 @@ class Logs_model extends CI_Model {
 
         return $resReturn;
     }
+
+    private function get_logs_for_sensor($sensor, $start = null, $end = null)
+    {
+        if(isset($sensor) === false) {
+            log_message('error', 'sensor method parameter was not set, expecting it');
+            return array();
+        }
+        $this->db->select('logs.value / 1000 as value, UNIX_TIMESTAMP(logs.datetime) * 1000 as datetime');
+        $this->db->from('logs');
+        $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
+        if($start && $end) {
+            $this->db->where('datetime > ', $start);
+            $this->db->where('datetime < ', $end);
+        } else {
+            $this->db->where('datetime > date_sub(now(), interval 24 hour)');
+        }
+        $this->db->where('sensors.name', $sensor);
+        $this->db->order_by('datetime', 'desc');
+        $query = $this->db->get();
+        $resultArray = $query->result_array();
+        return $resultArray;
+    }
+
 }
