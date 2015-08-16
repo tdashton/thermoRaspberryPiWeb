@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="utf-8">
+    <title>thermoRaspberryPi</title>
     <link href="<?php echo base_url('resources/css/bootstrap.min.css')?>" rel="stylesheet">
     <link href="<?php echo base_url('resources/css/jquery.datetimepicker.css')?>" rel="stylesheet">
     <script type="text/javascript" src="<?php echo base_url('resources/js/jquery-1.11.2.min.js')?>"></script>

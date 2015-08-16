@@ -9,15 +9,32 @@
     <div class="col-xs-10" id="chartContainer" class="row" style="height:300px;"></div>
   </div>
   <div class="row">
-    <div class="col-xs-10" id="chartContainer" class="row">
-      <h3>Daten &auml;ndern</h2>
-      <p>
-        Von: <input id="datetimepicker_start" type="text" >
-        bis: <input id="datetimepicker_end" type="text" >
-        <button type="button" id="datechange">los!</button>
-      </p>
+    <div class="col-xs-8">
+      <h3>Daten &auml;ndern</h3>
     </div>
   </div>
+  <div class="row">
+    <div class="col-xs-2">
+      Von:
+    </div>
+    <div class="col-xs-8">
+       <input id="datetimepicker_start" type="text" >
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-2">
+      bis: 
+    </div>
+    <div class="col-xs-8">
+      <input id="datetimepicker_end" type="text" >
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8 col-xs-offset-2">
+      <button type="button" id="datechange">los!</button>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
 
 var start = $('#datetimepicker_start').datetimepicker();
