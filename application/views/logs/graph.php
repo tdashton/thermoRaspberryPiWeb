@@ -46,7 +46,7 @@ $('#datechange').click(function() {
     {method: "post", data: {start: start.val(), end: end.val()}})
     .done(function(retData) {
       $("#chartContainer").CanvasJSChart({ //Pass chart options
-        data: retData
+        data: retData.data
       });
     });
 })
@@ -56,7 +56,7 @@ $(function () {
   var jqxhr = $.ajax( "/~tashton/thermoRaspberryPi/index.php/logs/history/json")
     .done(function(retData) {
       $("#chartContainer").CanvasJSChart({ //Pass chart options
-        data: retData
+        data: retData.data
       });
     });
   });

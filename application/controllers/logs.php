@@ -43,6 +43,7 @@ class Logs extends CI_Controller {
 
     public function history($type='json')
     {
+        $current = $this->input->get('current');
         $start = $this->input->post('start');
         $end = $this->input->post('end');
         if($start !== false) {
@@ -53,10 +54,16 @@ class Logs extends CI_Controller {
         }
 
         if($type='json') {
+            $data = new StdClass();
+            if($current) {
+                $data->data = $this->logs_model->get_current();
+            } else {
+                $data->data = $this->logs_model->get_history($start, $end);
+                
+            }
             $this->output
                 ->set_content_type('application/json')
-                ->set_output(json_encode($this->logs_model->get_history($start, $end)));
+                ->set_output(json_encode($data));
         }
     }
-
 }
