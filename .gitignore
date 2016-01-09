@@ -1,5 +1,6 @@
 .DS_Store
 
+application/config/thermo_control.php
 application/config/database.php
 
 application/cache/*
