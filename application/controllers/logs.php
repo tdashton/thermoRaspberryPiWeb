@@ -41,19 +41,24 @@ class Logs extends CI_Controller {
         $this->load->view('templates/footer');
     }    
 
-    public function history($type='json')
+    public function history($outputFormat = 'json', $timePeriod = 'post')
     {
-        $current = $this->input->get('current');
-        $start = $this->input->post('start');
-        $end = $this->input->post('end');
-        if($start !== false) {
-            $start = preg_replace('#/#', '-', $start);
-        }
-        if($end !== false) {
-            $end = preg_replace('#/#', '-', $end);
+        $current = false;
+        if($timePeriod == 'post') {
+            $start = $this->input->post('start');
+            $end = $this->input->post('end');
+            if($start !== false) {
+                $start = preg_replace('#/#', '-', $start);
+            }
+            if($end !== false) {
+                $end = preg_replace('#/#', '-', $end);
+            }
+        } else {
+            $current = true;
         }
 
-        if($type='json') {
+
+        if($outputFormat='json') {
             $data = new StdClass();
             if($current) {
                 $data->data = $this->logs_model->get_current();

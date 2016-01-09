@@ -23,27 +23,46 @@ function notify_controller($cmd, $param, $host, $port) {
     }
 
     if($socket_error == true) {
-        return "could not connect to socket";
+        return array(
+            "result" => null,
+            "error" => array("code" => 101, "text" => "could not connect to socket")
+            );
     }
 
-    $payload = sprintf("%s %d", $cmd, $param);
+//    $payload = sprintf("%s %d", $cmd, $param);
 
-    $bytesWritten = socket_write($socket, $payload, strlen($payload));
+    $success = false;
+    $bytesWritten = socket_write($socket, $cmd, strlen($cmd));
     $bytesRead = '';
+    $result = array("result" => null, "error" => null);
 
-    while($out = socket_read($socket, 1024)) {
+    while($out = socket_read($socket, 128)) {
         $bytesRead .= $out;
     }
+    log_message('debug', 'after socket open ' . $bytesRead);
 
-    log_message('debug', $bytesRead);
-    $success = false;
-    if(trim($bytesRead) == 'ACK') {
-        $success = true;
+    if(trim($bytesRead) == "READY") {
+        $bytesWritten = socket_write($socket, $param, strlen($param));
+        while($out = socket_read($socket, 128)) {
+            $bytesRead .= $out;
+        }
+        log_message('debug', 'after ready ' . $bytesRead);
+        if(trim($bytesRead) == 'ACK') {
+            // command was acknowledged
+            $success = true;
+            $result['result'] = $bytesRead;
+        } else {
+            log_message('debug', 'server returned a non ACK to parameter:' + $bytesRead);
+            $result['error'] = array("code" => 103, "text" => "Server did not ACK the command");
+        }
+    } else {
+        log_message('debug', 'server returned a non READY to command:' + $bytesRead);
+        $result['error'] = array("code" => 102, "text" => "server returned a non READY to command");
     }
 
     socket_close($socket);  
 
-    return $bytesRead;  
+    return $result;
 }
 
 // Fehlerbehandlungsfunktion

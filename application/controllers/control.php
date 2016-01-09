@@ -26,16 +26,29 @@ class Control extends CI_Controller {
     public function command() {
         $this->config->load('thermo_control', false, false);
 
+        $error = array();
+
         log_message('debug', 'Redirecting to index');
         $cmd = $this->input->post('cmd');
         $param = $this->input->post('param');
         log_message('debug', 'checking for params');
-        $result = array("error" => array("number" => 100, "text" => "missing params"));
+        $result = array(
+            "result" => null,
+            "error" => 
+                array(
+                    "code" => 100,
+                    "text" => "missing params"
+                )
+            );
         if($cmd != null && $param != null) {
             $host = $this->config->item("thermo_control_host");
             $port = $this->config->item("thermo_control_port");
             $result = notify_controller($cmd, $param, $host, $port);
+
         }
-        echo json_encode(array("result" => $result));
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
     }
 }
