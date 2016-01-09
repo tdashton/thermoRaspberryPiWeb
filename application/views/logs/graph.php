@@ -42,7 +42,7 @@ var end = $('#datetimepicker_end').datetimepicker();
 $('#datechange').click(function() {
   console.log("start " + start.val());
   console.log("end " + end.val());
-  var jqxhr = $.ajax( "/~tashton/thermoRaspberryPi/index.php/logs/history/json", 
+  var jqxhr = $.ajax( "<?php echo base_url('index.php/logs/history/json') ?>", 
     {method: "post", data: {start: start.val(), end: end.val()}})
     .done(function(retData) {
       $("#chartContainer").CanvasJSChart({ //Pass chart options
@@ -52,8 +52,7 @@ $('#datechange').click(function() {
 })
 
 $(function () {
-
-  var jqxhr = $.ajax( "/~tashton/thermoRaspberryPi/index.php/logs/history/json")
+  var jqxhr = $.ajax( "<?php echo base_url('index.php/logs/history/json') ?>")
     .done(function(retData) {
       $("#chartContainer").CanvasJSChart({ //Pass chart options
         data: retData.data
