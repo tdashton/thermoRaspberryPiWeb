@@ -30,22 +30,20 @@ function notify_controller($cmd, $param, $host, $port) {
     }
 
 //    $payload = sprintf("%s %d", $cmd, $param);
+    $cmd = $cmd . PHP_EOL;
+    $param = $param . PHP_EOL;
 
     $success = false;
     $bytesWritten = socket_write($socket, $cmd, strlen($cmd));
     $bytesRead = '';
     $result = array("result" => null, "error" => null);
 
-    while($out = socket_read($socket, 128)) {
-        $bytesRead .= $out;
-    }
+    $bytesRead = socket_read($socket, 128);
     log_message('debug', 'after socket open ' . $bytesRead);
 
     if(trim($bytesRead) == "READY") {
         $bytesWritten = socket_write($socket, $param, strlen($param));
-        while($out = socket_read($socket, 128)) {
-            $bytesRead .= $out;
-        }
+        $bytesRead = socket_read($socket, 128);
         log_message('debug', 'after ready ' . $bytesRead);
         if(trim($bytesRead) == 'ACK') {
             // command was acknowledged
