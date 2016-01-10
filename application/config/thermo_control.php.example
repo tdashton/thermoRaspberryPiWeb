@@ -2,3 +2,4 @@
 
 $config['thermo_control_host']      = '127.0.0.1';
 $config['thermo_control_port']      = 1234;
+$config['api_shared_secret']        = 'api_shared_secret';

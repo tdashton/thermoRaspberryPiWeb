@@ -25,7 +25,7 @@ function notify_controller($cmd, $param, $host, $port) {
     if($socket_error == true) {
         return array(
             "result" => null,
-            "error" => array("code" => 101, "text" => "could not connect to socket")
+            "error" => array("code" => 201, "text" => "could not connect to socket")
             );
     }
 
@@ -51,11 +51,11 @@ function notify_controller($cmd, $param, $host, $port) {
             $result['result'] = $bytesRead;
         } else {
             log_message('debug', 'server returned a non ACK to parameter:' + $bytesRead);
-            $result['error'] = array("code" => 103, "text" => "Server did not ACK the command");
+            $result['error'] = array("code" => 203, "text" => "Server did not ACK the command");
         }
     } else {
         log_message('debug', 'server returned a non READY to command:' + $bytesRead);
-        $result['error'] = array("code" => 102, "text" => "server returned a non READY to command");
+        $result['error'] = array("code" => 202, "text" => "server returned a non READY to command");
     }
 
     socket_close($socket);  

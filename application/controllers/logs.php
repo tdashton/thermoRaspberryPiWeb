@@ -24,7 +24,6 @@ class Logs extends CI_Controller {
      */
     public function index()
     {
-        log_message('info', 'The purpose of some variable is to provide some value.');
         $data['logs'] = $this->logs_model->get_current();
         $data['averages'] = $this->logs_model->get_last_day_average();
         $this->load->view('templates/header', $data);
