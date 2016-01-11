@@ -25,18 +25,22 @@ class Control extends CI_Controller {
 
     public function nonce()
     {
-        $nonce = $this->session->userdata('session_id');
+        session_start();
+        $this->setSessionNonce(rand(0, getrandmax()));
+        $nonce = $this->getSessionNonce();
+        log_message('debug', 'nonce generated');
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode(array("nonce" => $nonce)));
+            ->set_output(json_encode(array("nonce" => (string)$nonce)));
     }
 
     public function command() {
+        session_start();
         $this->config->load('thermo_control', false, false);
 
         $error = array();
 
-        $nonce = $this->session->userdata('session_id');
+        $nonce = $this->getSessionNonce();
         $sharedSecret = $this->config->item("api_shared_secret");
         $cmd = $this->input->post('cmd');
         $param = $this->input->post('param');
@@ -54,7 +58,12 @@ class Control extends CI_Controller {
                     "text" => "missing params"
                 )
             );
-        if($signature != $hash) {
+        if($nonce == false) {
+            $result['error'] = array(
+                    "code" => 102,
+                    "text" => "no nonce generated"
+                );
+        } elseif($signature != $hash) {
             $result['error'] = array(
                     "code" => 101,
                     "text" => "bad signature"
@@ -65,12 +74,31 @@ class Control extends CI_Controller {
                 $host = $this->config->item("thermo_control_host");
                 $port = $this->config->item("thermo_control_port");
                 $result = notify_controller($cmd, $param, $host, $port);
+                unset($_SESSION['nonce']);
             }
         }
-
 
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
+    }
+
+    /**
+     * check for a nonce in the session, if available return it if not return false.
+     */
+    private function getSessionNonce() {
+        if(isset($_SESSION['nonce']) == false) {
+            return false;
+        }
+        return $_SESSION['nonce'];
+    }
+
+    /**
+     * sets the nonce in the session if it has not already been set.
+     */
+    private function setSessionNonce($param) {
+        if(isset($_SESSION['nonce']) == false) {
+            $_SESSION['nonce'] = $param;
+        }
     }
 }
