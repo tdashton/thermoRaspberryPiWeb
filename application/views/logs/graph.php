@@ -43,7 +43,7 @@ $('#datechange').click(function() {
   console.log("start " + start.val());
   console.log("end " + end.val());
   var jqxhr = $.ajax( "<?php echo base_url('index.php/logs/history/json') ?>", 
-    {method: "post", data: {start: start.val(), end: end.val()}})
+    {method: "get", data: {start: start.val(), end: end.val()}})
     .done(function(retData) {
       $("#chartContainer").CanvasJSChart({ //Pass chart options
         data: retData.data

@@ -6,7 +6,7 @@ class Control extends CI_Controller {
     {
         parent::__construct();
         $this->load->helper('control');
-        $this->load->model('Logs_control_model');
+        $this->load->model('logs_control_model');
 
     }
 
@@ -26,7 +26,7 @@ class Control extends CI_Controller {
     }
 
     public function read() {
-        $data['query'] = $this->Logs_control_model->get_last_control_values();
+        $data['query'] = $this->logs_control_model->get_last_control_values();
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode(array('result' => $data['query'])));
@@ -83,7 +83,7 @@ class Control extends CI_Controller {
                 $host = $this->config->item("thermo_control_host");
                 $port = $this->config->item("thermo_control_port");
                 $result = notify_controller($cmd, $param, $host, $port);
-                $this->Logs_control_model->update_last_control_value($cmd, $param);
+                $this->logs_control_model->update_last_control_value($cmd, $param);
                 unset($_SESSION['nonce']);
             }
         }

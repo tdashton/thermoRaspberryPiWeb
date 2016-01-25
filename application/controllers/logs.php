@@ -44,8 +44,8 @@ class Logs extends CI_Controller {
     {
         $current = false;
         if($timePeriod == 'post') {
-            $start = $this->input->post('start');
-            $end = $this->input->post('end');
+            $start = $this->input->get('start');
+            $end = $this->input->get('end');
             if($start !== false) {
                 $start = preg_replace('#/#', '-', $start);
             }
