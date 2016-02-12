@@ -1,9 +1,6 @@
 <?php
 class Logs_control_model extends CI_Model {
 
-    const NAME_SENSOR_INSIDE = '10-000802b5535b';
-    const NAME_SENSOR_OUTSIDE = '10-000802bcf635';
-
     public function __construct()
     {
         $this->load->database();

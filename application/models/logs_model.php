@@ -1,12 +1,13 @@
 <?php
 class Logs_model extends CI_Model {
 
-    const NAME_SENSOR_INSIDE = '10-000802b5535b';
-    const NAME_SENSOR_OUTSIDE = '10-000802bcf635';
+    private $sensors = array();
 
     public function __construct()
     {
         $this->load->database();
+        $this->config->load('thermopi', false, false);
+        $this->sensors = $this->config->item('sensors');
     }
 
     public function get_current($slug = FALSE)
@@ -41,35 +42,24 @@ class Logs_model extends CI_Model {
          */
         $resReturn = array();
 
-        // get first dataset
-        $dataset = new stdClass();
-        $dataset->type = 'line';
-        $dataset->xValueType = "dateTime";
-        // $dataset->showInLegend = true;
-        // $dataset->name = "Draussen";
-        $dataset->dataPoints = array();
+        foreach($this->sensors as $key => $value) {
+            log_message("debug", $value);
 
-        $resultArray = $this->get_logs_for_sensor(self::NAME_SENSOR_OUTSIDE, $start, $end);
-        $count = count($resultArray);
-        for($i = 0; $i < $count; $i++) {
-            array_push($dataset->dataPoints, array('x' => (double)$resultArray[$i]['datetime'], 'y' => (float)$resultArray[$i]['value']));
+            // get datasets
+            $dataset = new stdClass();
+            $dataset->type = 'line';
+            $dataset->xValueType = "dateTime";
+            // $dataset->showInLegend = true;
+            // $dataset->name = "$key";
+            $dataset->dataPoints = array();
+
+            $resultArray = $this->get_logs_for_sensor($value, $start, $end);
+            $count = count($resultArray);
+            for($i = 0; $i < $count; $i++) {
+                array_push($dataset->dataPoints, array('x' => (double)$resultArray[$i]['datetime'], 'y' => (float)$resultArray[$i]['value']));
+            }
+            array_push($resReturn, $dataset);
         }
-        array_push($resReturn, $dataset);
-
-        // get second dataset
-        $resultArray = $this->get_logs_for_sensor(self::NAME_SENSOR_INSIDE, $start, $end);
-        $dataset = new stdClass();
-        $dataset->type = 'line';
-        $dataset->xValueType = "dateTime";
-        // $dataset->showInLegend = true;
-        // $dataset->name = 'Drinnen';
-        $dataset->dataPoints = array();
-
-        $count = count($resultArray);
-        for($i = 0; $i < $count; $i++) {
-            array_push($dataset->dataPoints, array('x' => (double)$resultArray[$i]['datetime'], 'y' => (float)$resultArray[$i]['value']));
-        }
-        array_push($resReturn, $dataset);
 
         return $resReturn;
     }

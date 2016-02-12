@@ -45,7 +45,7 @@ class Control extends CI_Controller {
 
     public function command() {
         session_start();
-        $this->config->load('thermo_control', false, false);
+        $this->config->load('thermopi', false, false);
 
         $error = array();
 

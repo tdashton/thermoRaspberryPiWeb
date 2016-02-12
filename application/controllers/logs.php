@@ -24,8 +24,11 @@ class Logs extends CI_Controller {
      */
     public function index()
     {
+        $this->config->load('thermopi');
         $data['logs'] = $this->logs_model->get_current();
         $data['averages'] = $this->logs_model->get_last_day_average();
+        $this->getLocationName($data);
+
         $this->load->view('templates/header', $data);
         $this->load->view('logs/index', $data);
         $this->load->view('templates/footer');
@@ -33,7 +36,9 @@ class Logs extends CI_Controller {
 
     public function graph()
     {
+        $this->config->load('thermopi');
         $data = array();
+        $this->getLocationName($data);
 
         $this->load->view('templates/header', $data);
         $this->load->view('logs/graph', $data);
@@ -69,5 +74,15 @@ class Logs extends CI_Controller {
                 ->set_content_type('application/json')
                 ->set_output(json_encode($data));
         }
+    }
+
+    private function getLocationName(&$data) {
+        $location_name = $this->input->get('location_name');
+        log_message("debug", $location_name);
+
+        if(empty($location_name) === true) {
+            $location_name = $this->config->item('location_name');
+        }
+        $data['location_name'] = $location_name;
     }
 }

@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-10" class="row" >
-      <h1>Pfeilgasse</h1>
+      <h1><?php echo $location_name ?></h1>
       <h2>Graph</h2>
     </div>
   </div>
