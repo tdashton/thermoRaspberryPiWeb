@@ -2,7 +2,7 @@
 
 $socket_error = false;
 
-function notify_controller($cmd, $param, $host, $port) {
+function send_command($cmd, $param, $host, $port) {
     global $socket_error;
     set_error_handler("myErrorHandler");
 
@@ -30,32 +30,37 @@ function notify_controller($cmd, $param, $host, $port) {
     }
 
 //    $payload = sprintf("%s %d", $cmd, $param);
-    $cmd = $cmd . PHP_EOL;
-    $param = $param . PHP_EOL;
 
     $success = false;
-    $bytesWritten = socket_write($socket, $cmd, strlen($cmd));
+    $bytesWritten = socket_write($socket, $cmd . PHP_EOL, strlen($cmd . PHP_EOL));
     $bytesRead = '';
     $result = array("result" => null, "error" => null);
 
     $bytesRead = socket_read($socket, 128);
     log_message('debug', 'after socket open ' . $bytesRead);
 
-    if(trim($bytesRead) == "READY") {
-        $bytesWritten = socket_write($socket, $param, strlen($param));
-        $bytesRead = socket_read($socket, 128);
-        log_message('debug', 'after ready ' . $bytesRead);
-        if(trim($bytesRead) == 'ACK') {
-            // command was acknowledged
-            $success = true;
-            $result['result'] = $bytesRead;
-        } else {
-            log_message('debug', 'server returned a non ACK to parameter:' + $bytesRead);
-            $result['error'] = array("code" => 203, "text" => "Server did not ACK the command");
-        }
-    } else {
-        log_message('debug', 'server returned a non READY to command:' + $bytesRead);
-        $result['error'] = array("code" => 202, "text" => "server returned a non READY to command");
+    switch($cmd) {
+        case Control::CONTROL_CMD_TEMP:
+        case Control::CONTROL_CMD_TIME:
+            if(trim($bytesRead) == "READY") {
+                $bytesWritten = socket_write($socket, $param . PHP_EOL, strlen($param . PHP_EOL));
+                $bytesRead = socket_read($socket, 128);
+                log_message('debug', 'after ready ' . $bytesRead);
+                if(trim($bytesRead) == 'ACK') {
+                    // command was acknowledged
+                    $success = true;
+                    $result['result'] = $bytesRead;
+                } else {
+                    log_message('debug', 'server returned a non ACK to parameter:' + $bytesRead);
+                    $result['error'] = array("code" => 203, "text" => "Server did not ACK the command");
+                }
+            } else {
+                log_message('debug', 'server returned a non READY to command:' + $bytesRead);
+                $result['error'] = array("code" => 202, "text" => "server returned a non READY to command");
+            }
+            break;
+        case Control::CONTROL_CMD_STATUS:
+            $result = $bytesRead;
     }
 
     socket_close($socket);  

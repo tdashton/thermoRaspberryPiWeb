@@ -2,12 +2,15 @@
 
 class Control extends CI_Controller {
 
+    const CONTROL_CMD_TEMP = 'CMD TEMP';
+    const CONTROL_CMD_TIME = 'CMD TIME';
+    const CONTROL_CMD_STATUS = 'CMD STATUS';
+
     public function __construct()
     {
         parent::__construct();
         $this->load->helper('control');
         $this->load->model('logs_control_model');
-
     }
 
     /**
@@ -26,10 +29,17 @@ class Control extends CI_Controller {
     }
 
     public function read() {
+
         $data['query'] = $this->logs_control_model->get_last_control_values();
+        $src = 'db';
+        if(empty($data['query'])) {
+            $data['query'] = $this->getCurrentControlValues();
+            $src = 'controller';
+        }
+
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode(array('result' => $data['query'])));
+            ->set_output(json_encode(array('source' => $src, 'result' => $data['query'])));
     }
 
     public function nonce()
@@ -82,7 +92,7 @@ class Control extends CI_Controller {
             if($cmd != null && $param != null) {
                 $host = $this->config->item("thermo_control_host");
                 $port = $this->config->item("thermo_control_port");
-                $result = notify_controller($cmd, $param, $host, $port);
+                $result = send_command($cmd, $param, $host, $port);
                 $this->logs_control_model->update_last_control_value($cmd, $param);
                 unset($_SESSION['nonce']);
             }
@@ -91,6 +101,35 @@ class Control extends CI_Controller {
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
+    }
+
+    /**
+     * reads control values from the attached contoller
+     */
+    private function getCurrentControlValues()
+    {
+        $this->config->load('thermopi', false, false);
+        $host = $this->config->item("thermo_control_host");
+        $port = $this->config->item("thermo_control_port");
+        $ret = send_command('CMD STATUS', NULL, $host, $port);
+
+        $currentValues = explode("\n", trim($ret));
+
+        array_walk($currentValues, function(&$value) {
+            list($key, $value) = explode(':', $value);
+            $value = array(
+                'type' => "CMD $key",
+                'param' => $value,
+                'datetime' => date(DATE_ATOM),
+                );
+            });
+        if(!empty($currentValues)) {
+            // write to the database
+            foreach($currentValues as $value) {
+                $this->logs_control_model->update_last_control_value($value['type'], $value['param']);
+            }
+        }
+        return $currentValues;
     }
 
     /**
