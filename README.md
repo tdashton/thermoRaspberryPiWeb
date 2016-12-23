@@ -37,3 +37,6 @@ The following REST endpoints return JSON data:
 * GET URL_ROOT/logs/history/json/?start=DATE&end=DATE
 * GET URL_ROOT/control/read
 * POST URL_ROOT/control/command
+	POST Param 'cmd' - the command
+	POST Param 'param' - the value for the command (empty in some cases)
+	POST Param 'signature' - signature : md5($cmd . $param . $sharedSecret . $nonce)
