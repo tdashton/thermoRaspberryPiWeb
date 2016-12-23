@@ -12,6 +12,7 @@ class Control extends CI_Controller {
         $this->config->load('thermopi', false, false);
         $this->load->helper('control');
         $this->load->model('control_cache_model');
+        $this->load->model('control_logs_model');
     }
 
     /**
@@ -96,6 +97,9 @@ class Control extends CI_Controller {
                 $result = send_command($cmd, $param, $host, $port);
                 $this->control_cache_model->update_last_control_value($cmd, $param);
                 unset($_SESSION['nonce']);
+                if (in_array($cmd, array(self::CONTROL_CMD_TEMP))) {
+                    $this->control_logs_model->update_last_control_value($cmd, $param);
+                }
             }
         }
 

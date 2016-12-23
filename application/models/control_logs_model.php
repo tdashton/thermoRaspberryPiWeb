@@ -12,16 +12,4 @@ class Control_logs_model extends CI_Model {
             array('type' => $type, 'param' => $param));
         return;
     }
-
-    /**
-     * @return array an empty array if nothing was found
-     */
-    public function get_last_control_values()
-    {
-        $this->db->select('*');
-        $this->db->from('control_logs');
-        $this->db->where('datetime > date_sub(now(), interval 60 second)');
-        $query = $this->db->get();
-        return $query->result();
-    }
 }
