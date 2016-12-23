@@ -97,7 +97,7 @@ class Control extends CI_Controller {
                 $result = send_command($cmd, $param, $host, $port);
                 $this->control_cache_model->update_last_control_value($cmd, $param);
                 unset($_SESSION['nonce']);
-                if (in_array($cmd, array(self::CONTROL_CMD_TEMP))) {
+                if (in_array($cmd, array(self::CONTROL_CMD_TEMP, self::CONTROL_CMD_TIME))) {
                     $this->control_logs_model->update_last_control_value($cmd, $param);
                 }
             }
