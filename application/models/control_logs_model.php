@@ -1,5 +1,5 @@
 <?php
-class Logs_control_model extends CI_Model {
+class Control_logs_model extends CI_Model {
 
     public function __construct()
     {
@@ -8,7 +8,7 @@ class Logs_control_model extends CI_Model {
 
     public function update_last_control_value($type, $param) {
         $this->db->set('datetime', 'now()', false);
-        $this->db->replace('logs_control', 
+        $this->db->replace('control_logs', 
             array('type' => $type, 'param' => $param));
         return;
     }
@@ -19,7 +19,7 @@ class Logs_control_model extends CI_Model {
     public function get_last_control_values()
     {
         $this->db->select('*');
-        $this->db->from('logs_control');
+        $this->db->from('control_logs');
         $this->db->where('datetime > date_sub(now(), interval 60 second)');
         $query = $this->db->get();
         return $query->result();

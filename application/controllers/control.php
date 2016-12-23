@@ -9,8 +9,9 @@ class Control extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
+        $this->config->load('thermopi', false, false);
         $this->load->helper('control');
-        $this->load->model('logs_control_model');
+        $this->load->model('control_cache_model');
     }
 
     /**
@@ -30,7 +31,7 @@ class Control extends CI_Controller {
 
     public function read() {
 
-        $data['query'] = $this->logs_control_model->get_last_control_values();
+        $data['query'] = $this->control_cache_model->get_last_control_values();
         $src = 'db';
         if(empty($data['query'])) {
             $data['query'] = $this->getCurrentControlValues();
@@ -93,7 +94,7 @@ class Control extends CI_Controller {
                 $host = $this->config->item("thermo_control_host");
                 $port = $this->config->item("thermo_control_port");
                 $result = send_command($cmd, $param, $host, $port);
-                $this->logs_control_model->update_last_control_value($cmd, $param);
+                $this->control_cache_model->update_last_control_value($cmd, $param);
                 unset($_SESSION['nonce']);
             }
         }
@@ -126,7 +127,7 @@ class Control extends CI_Controller {
         if(!empty($currentValues)) {
             // write to the database
             foreach($currentValues as $value) {
-                $this->logs_control_model->update_last_control_value($value['type'], $value['param']);
+                $this->control_cache_model->update_last_control_value($value['type'], $value['param']);
             }
         }
         return $currentValues;
