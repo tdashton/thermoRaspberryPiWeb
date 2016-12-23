@@ -125,7 +125,7 @@ class Control extends CI_Controller {
             $value = array(
                 'type' => "CMD $key",
                 'param' => $value,
-                'datetime' => date(DATE_ATOM),
+                'datetime' => date('Y-m-d H:i:s'),
                 );
             });
         if(!empty($currentValues)) {
