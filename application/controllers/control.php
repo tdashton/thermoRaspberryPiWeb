@@ -98,7 +98,7 @@ class Control extends CI_Controller {
                 $this->control_cache_model->update_last_control_value($cmd, $param);
                 unset($_SESSION['nonce']);
                 if (in_array($cmd, array(self::CONTROL_CMD_TEMP, self::CONTROL_CMD_TIME))) {
-                    $this->control_logs_model->update_last_control_value($cmd, $param);
+                    $this->control_logs_model->insert_control_value($cmd, $param);
                 }
             }
         }

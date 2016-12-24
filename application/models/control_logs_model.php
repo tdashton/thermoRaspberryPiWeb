@@ -6,7 +6,7 @@ class Control_logs_model extends CI_Model {
         $this->load->database();
     }
 
-    public function update_last_control_value($type, $param) {
+    public function insert_control_value($type, $param) {
         $this->db->set('datetime', 'now()', false);
         $this->db->replace('control_logs', 
             array('type' => $type, 'param' => $param));
