@@ -6,10 +6,22 @@ class Control_cache_model extends CI_Model {
         $this->load->database();
     }
 
+    /**
+     * @param string $type
+     * @param string $param
+     */
     public function update_last_control_value($type, $param) {
         $this->db->set('datetime', 'now()', false);
         $this->db->replace('control_cache', 
             array('type' => $type, 'param' => $param));
+        return;
+    }
+
+    /**
+     * flushes all control cache values
+     */
+    public function flush_all_control_values() {
+        $this->db->empty_table('control_cache');
         return;
     }
 
