@@ -4,13 +4,33 @@
 
 base_index:
   path:     /
+  methods:  [GET]
   defaults: { _controller: \Com\Aaa\ThermoPi\Controller\DefaultController::indexAction }
 
 log_index:
   path:     /logs/index
+  methods:  [GET]
   defaults: { _controller: \Com\Aaa\ThermoPi\Controller\LogController::indexAction }
 
 log_graph:
   path:     /logs/graph
-  defaults: { _controller: \Com\Aaa\ThermoPi\Controller\LogController::indexAction }
+  methods:  [GET]
+  defaults: { _controller: \Com\Aaa\ThermoPi\Controller\LogController::graphAction }
 
+log_history_data:
+  path: /logs/history/{format}/current
+  methods:  [GET]
+  defaults: { _controller: \Com\Aaa\ThermoPi\Controller\LogController::historyAction }
+
+control_read:
+  path: /control/read
+  defaults: { _controller: \Com\Aaa\ThermoPi\Controller\CommandController::readAction }
+
+control_command:
+  path: /control/command
+  defaults: { _controller: \Com\Aaa\ThermoPi\Controller\CommandController::commandAction }
+  methods: [POST]
+  requirements:
+    cmd: "A-Z+"
+    param: "A-Z+"
+    signature: "A-Z+"
