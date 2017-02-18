@@ -2,6 +2,11 @@
 
 namespace Com\Aaa\ThermoPi\Model;
 
+use Doctrine\Entity;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\DBAL\Schema\Column;
 
 /**
  * Class ControlCache
@@ -30,6 +35,7 @@ UNIQUE KEY `type` (`type`)
 
  */
     /**
+     * @Id
      * @Column(type="string", columnDefinition="CHAR(16) DEFAULT NULL")
      *   `type` char(16) DEFAULT NULL,
      */

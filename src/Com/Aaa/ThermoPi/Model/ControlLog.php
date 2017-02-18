@@ -2,6 +2,10 @@
 
 namespace Com\Aaa\ThermoPi\Model;
 
+use Doctrine\Entity;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\Column;
+
 /**
  * Class ControlLog
  * @package Com\Aaa\ThermoPi\Model

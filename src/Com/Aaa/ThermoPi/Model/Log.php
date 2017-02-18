@@ -2,6 +2,11 @@
 
 namespace Com\Aaa\ThermoPi\Model;
 
+use Doctrine\Entity;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\DBAL\Schema\Column;
+
 /**
  * Class Log
  * @package Com\Aaa\ThermoPi\Model

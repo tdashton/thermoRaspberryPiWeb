@@ -2,6 +2,12 @@
 
 namespace Com\Aaa\ThermoPi\Model;
 
+use Doctrine\Entity;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\DBAL\Schema\Column;
+
 /**
  * @Entity
  * @Table(name="logs",
