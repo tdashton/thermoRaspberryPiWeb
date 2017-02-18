@@ -1,3 +1,16 @@
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
+#app:
+#    resource: "@AppBundle/Controller/"
+#    type:     annotation
+
+base_index:
+  path:     /
+  defaults: { _controller: \Com\Aaa\ThermoPi\Controller\DefaultController::indexAction }
+
+log_index:
+  path:     /logs/index
+  defaults: { _controller: \Com\Aaa\ThermoPi\Controller\LogController::indexAction }
+
+log_graph:
+  path:     /logs/graph
+  defaults: { _controller: \Com\Aaa\ThermoPi\Controller\LogController::indexAction }
+

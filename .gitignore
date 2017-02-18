@@ -1,5 +1,16 @@
 .DS_Store
 
+## PHPStorm
+.idea
+
+## symfony
+vendor
+UPGRADE*
+app/config/parameters.yml
+app/cache/*
+app/logs/*
+
+## codeigniter
 application/config/thermopi.php
 application/config/database.php
 

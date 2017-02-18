@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace Com\Aaa\ThermoPi\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
