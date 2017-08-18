@@ -10,9 +10,9 @@ class Logs_model extends CI_Model {
         $this->sensors = $this->config->item('sensors');
     }
 
-    public function get_current($slug = FALSE)
+    public function get_current($slug = false)
     {
-        if ($slug === FALSE) {
+        if ($slug === false) {
             $this->db->select('value / 1000 as value, datetime, fk_sensor, description');
             $this->db->from('logs');
             $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
@@ -39,26 +39,31 @@ class Logs_model extends CI_Model {
          * @var $resReturn initialize the return array
          */
         $resReturn = array();
-
+        //,
+        // series: [ {
+        //   name: 'one',
+        //   data: [26.187, 26.25, 26.25, 26.062] 
+        // }, {
+        //   name: 'two',
+        //   data: [24.312, 24.312, 24.375, 24.312]
+        // }, {
+        //   name: 'three',
+        //   data: [24.937, 25, 25, 24.937]
+        // }]
         foreach($this->sensors as $key => $value) {
             log_message("debug", $value);
 
-            // get datasets
-            $dataset = new stdClass();
-            $dataset->type = 'line';
-            $dataset->xValueType = "dateTime";
-            // $dataset->showInLegend = true;
-            // $dataset->name = "$key";
-            $dataset->dataPoints = array();
+            // get series
+            $series = array();
+            $series['name'] = $key;
+            $series['data'] = array();
 
             $resultArray = $this->get_logs_for_sensor($value, $start, $end);
-            $count = count($resultArray);
-            for($i = 0; $i < $count; $i++) {
-                array_push($dataset->dataPoints, array('x' => (double)$resultArray[$i]['datetime'], 'y' => (float)$resultArray[$i]['value']));
+            for($i = 0; $i < count($resultArray); $i++) {
+                array_push($series['data'], array((double)$resultArray[$i]['datetime'], (float)$resultArray[$i]['value']));
             }
-            array_push($resReturn, $dataset);
+            array_push($resReturn, $series);
         }
-
         return $resReturn;
     }
 
@@ -78,10 +83,9 @@ class Logs_model extends CI_Model {
             $this->db->where('datetime > date_sub(now(), interval 24 hour)');
         }
         $this->db->where('sensors.name', $sensor);
-        $this->db->order_by('datetime', 'desc');
+        $this->db->order_by('datetime', 'asc');
         $query = $this->db->get();
         $resultArray = $query->result_array();
         return $resultArray;
     }
-
 }
