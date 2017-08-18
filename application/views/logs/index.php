@@ -1,5 +1,5 @@
 <div class="container-fluid">
-<h1><?php echo $location_name ?></h1>
+<h1><?php echo $locationName ?></h1>
   <div class="row">
     <div class="col-xs-12">Letzte Messzeit: <?php echo $logs[0]['datetime'] ?></div>
   </div>

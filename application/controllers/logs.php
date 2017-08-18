@@ -27,7 +27,7 @@ class Logs extends CI_Controller {
         $this->config->load('thermopi');
         $data['logs'] = $this->logs_model->get_current();
         $data['averages'] = $this->logs_model->get_last_day_average();
-        $this->getLocationName($data);
+        $data['locationName'] = $this->getLocationName();
 
         $this->load->view('templates/header', $data);
         $this->load->view('logs/index', $data);
@@ -37,8 +37,12 @@ class Logs extends CI_Controller {
     public function graph()
     {
         $this->config->load('thermopi');
-        $data = array();
-        $this->getLocationName($data);
+        $data = array(
+            'startTimestampMillis' => time() * 1000,
+            'xAxisTitleText' => 'Grad',
+            'locationName' => $this->getLocationName(),
+            'timezoneOffset' => timezone_offset_get(new DateTimeZone(date_default_timezone_get()), new DateTime()) / 60,
+        );
 
         $this->load->view('templates/header', $data);
         $this->load->view('logs/graph', $data);
@@ -52,22 +56,21 @@ class Logs extends CI_Controller {
             $start = $this->input->get('start');
             $end = $this->input->get('end');
             if($start !== false) {
-                $start = preg_replace('#/#', '-', $start);
+                $start = strftime('%Y/%m/%d %H:%M', $start / 1000);
             }
             if($end !== false) {
-                $end = preg_replace('#/#', '-', $end);
+                $end = strftime('%Y/%m/%d %H:%M', $end / 1000);
             }
         } else {
             $current = true;
         }
 
-
-        if($outputFormat='json') {
+        if($outputFormat == 'json') {
             $data = new StdClass();
             if($current) {
-                $data->data = $this->logs_model->get_current();
+                $data = $this->logs_model->get_current();
             } else {
-                $data->data = $this->logs_model->get_history($start, $end);
+                $data = $this->logs_model->get_history($start, $end);
                 
             }
             $this->output
@@ -76,13 +79,13 @@ class Logs extends CI_Controller {
         }
     }
 
-    private function getLocationName(&$data) {
+    private function getLocationName() {
         $location_name = $this->input->get('location_name');
         log_message("debug", $location_name);
 
         if(empty($location_name) === true) {
             $location_name = $this->config->item('location_name');
         }
-        $data['location_name'] = $location_name;
+        return $location_name;
     }
 }
