@@ -58,7 +58,7 @@
 
 Highcharts.setOptions({
   global: {
-    timezoneOffset: <?php echo -$timezoneOffset ?>
+    useUTC: false
   }
 });
 

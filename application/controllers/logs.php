@@ -41,7 +41,6 @@ class Logs extends CI_Controller {
             'startTimestampMillis' => time() * 1000,
             'xAxisTitleText' => 'Grad',
             'locationName' => $this->getLocationName(),
-            'timezoneOffset' => timezone_offset_get(new DateTimeZone(date_default_timezone_get()), new DateTime()) / 60,
         );
 
         $this->load->view('templates/header', $data);
