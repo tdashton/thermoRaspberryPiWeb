@@ -2,7 +2,6 @@
   <div class="row">
     <div class="col-xs-10" class="row" >
       <h1><?php echo $locationName ?></h1>
-      <h2>Graph</h2>
     </div>
   </div>
   <div class="row">
