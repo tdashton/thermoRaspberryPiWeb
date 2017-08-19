@@ -74,11 +74,11 @@ var containerConfig = {
     align: 'center',
     verticalAlign: 'bottom'
   }
-  // series: seriesData
+  // series: seriesData.data
 };
 
 $.getJSON('<?php echo base_url('index.php/logs/history/json') ?>', function (seriesData) {
-  Highcharts.chart('container', $.extend(containerConfig, {series: seriesData}));
+  Highcharts.chart('container', $.extend(containerConfig, {series: seriesData.data}));
 });
 
 var startInput = $('#datetimepicker_start').datetimepicker();
@@ -88,7 +88,7 @@ $('#today').click(function() {
   $.getJSON('<?php echo base_url('index.php/logs/history/json') ?>',
     {start: new Date(Date.now() - (1000 * 86400 * 1)).getTime(), end: new Date(Date.now()).getTime()},
     function (seriesData) {
-      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData}));
+      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData.data}));
     }
   );
 });
@@ -97,7 +97,7 @@ $('#yesterday').click(function() {
   $.getJSON('<?php echo base_url('index.php/logs/history/json') ?>',
     {start: new Date(Date.now() - (1000 * 86400 * 2)).getTime(), end: new Date(Date.now() - (1000 * 86400 * 1)).getTime()},
     function (seriesData) {
-      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData}));
+      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData.data}));
     }
   );
 });
@@ -106,7 +106,7 @@ $('#this_day_last_week').click(function() {
   $.getJSON('<?php echo base_url('index.php/logs/history/json') ?>',
     {start: new Date(Date.now() - (1000 * 86400 * 7)).getTime(), end: new Date(Date.now() - (1000 * 86400 * 6)).getTime()},
     function (seriesData) {
-      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData}));
+      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData.data}));
     }
   );
 });
@@ -115,7 +115,7 @@ $('#last_seven_days').click(function() {
   $.getJSON('<?php echo base_url('index.php/logs/history/json') ?>',
     {start: new Date(Date.now() - (1000 * 86400 * 5)).getTime(), end: new Date(Date.now()).getTime()},
     function (seriesData) {
-      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData}));
+      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData.data}));
     }
   );
 });
@@ -126,7 +126,7 @@ $('#datechange').click(function() {
   $.getJSON('<?php echo base_url('index.php/logs/history/json') ?>',
     {start: new Date(startInput.val()).getTime(), end: new Date(endInput.val()).getTime()},
     function (seriesData) {
-      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData}));
+      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData.data}));
     }
   );
    // var jqxhr = $.ajax( "<?php echo base_url('index.php/logs/history/json') ?>", 

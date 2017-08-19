@@ -67,9 +67,9 @@ class Logs extends CI_Controller {
         if($outputFormat == 'json') {
             $data = new StdClass();
             if($current) {
-                $data = $this->logs_model->get_current();
+                $data->data = $this->logs_model->get_current();
             } else {
-                $data = $this->logs_model->get_history($start, $end);
+                $data->data = $this->logs_model->get_history($start, $end);
                 
             }
             $this->output
