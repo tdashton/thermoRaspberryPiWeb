@@ -14,12 +14,17 @@
   </div>
   <div class="row">
     <div class="col-xs-10">
-      <a id='last_twelve_hours' href='#'>letzte zwölf Stunden ...</a>
+      <a id='last_12_hours' href='#'>letzte zwölf Stunden ...</a>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-10">
-      <a id='today' href='#'>letzte 24 Stunden ...</a>
+      <a id='last_24_hours' href='#'>letzte 24 Stunden ...</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-10">
+      <a id='today' href='#'>Heute ...</a>
     </div>
   </div>
   <div class="row">
@@ -99,30 +104,34 @@ function refreshChartWithData(dateStart, dateEnd) {
 var startInput = $('#datetimepicker_start').datetimepicker();
 var endInput = $('#datetimepicker_end').datetimepicker();
 
-$('#last_twelve_hours').click(function() {
-  refreshChartWithData(new Date(Date.now() - (1000 * 3600 * 12)), new Date(Date.now()));
+$('#last_12_hours').click(function() {
+  getData(new Date(Date.now() - (1000 * 3600 * 12)), new Date());
+});
+
+$('#last_24_hours').click(function() {
+  getData(new Date(Date.now() - (1000 * 86400 * 1)), new Date());
 });
 
 $('#today').click(function() {
-  refreshChartWithData(new Date(Date.now() - (1000 * 86400 * 1)), new Date(Date.now()));
+  getData(new Date(Date.now() - (Date.now() % (86400 * 1000))), new Date());
 });
 
 $('#yesterday').click(function() {
-  refreshChartWithData(new Date(Date.now() - (1000 * 86400 * 2)), new Date(Date.now() - (1000 * 86400 * 1)));
+  getData(new Date(Date.now() - (Date.now() % (86400 * 1000)) - (86400 * 1000 * 2)), new Date(Date.now() - (Date.now() % (86400 * 1000)) - (86400 * 1000)));
 });
 
 $('#this_day_last_week').click(function() {
-  refreshChartWithData(new Date(Date.now() - (1000 * 86400 * 7)), new Date(Date.now() - (1000 * 86400 * 6)));
+  getData(new Date(Date.now() - (Date.now() % (86400 * 1000)) - (86400 * 1000 * 7)), new Date(Date.now() - (Date.now() % (86400 * 1000)) - (86400 * 1000 * 6)));
 });
 
 $('#last_seven_days').click(function() {
-  refreshChartWithData(new Date(Date.now() - (1000 * 86400 * 5)), new Date(Date.now()));
+  getData(new Date(Date.now() - (Date.now() % (86400 * 1000)) - (86400 * 1000 * 5)), new Date());
 });
 
 $('#datechange').click(function() {
   console.log("start " + startInput.val());
   console.log("end " + endInput.val());
-  refreshChartWithData(new Date(startInput.val()), new Date(endInput.val()));
+  getData(new Date(startInput.val()), new Date(endInput.val()));
 });
 </script>
 </div>
