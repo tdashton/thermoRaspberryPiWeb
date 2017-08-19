@@ -14,7 +14,12 @@
   </div>
   <div class="row">
     <div class="col-xs-10">
-      <a id='today' href='#'>Heute ...</a>
+      <a id='last_twelve_hours' href='#'>letzte zwölf Stunden ...</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-10">
+      <a id='today' href='#'>letzte 24 Stunden ...</a>
     </div>
   </div>
   <div class="row">
@@ -83,6 +88,15 @@ $.getJSON('<?php echo base_url('index.php/logs/history/json') ?>', function (ser
 
 var startInput = $('#datetimepicker_start').datetimepicker();
 var endInput = $('#datetimepicker_end').datetimepicker();
+
+$('#last_twelve_hours').click(function() {
+  $.getJSON('http://volition.ddns.net/thermoRaspberryPiWeb/index.php/logs/history/json',
+    {start: new Date(Date.now() - (1000 * 3600 * 12)).getTime(), end: new Date(Date.now()).getTime()},
+    function (seriesData) {
+      Highcharts.chart('container', $.extend(containerConfig, {series: seriesData.data}));
+    }
+  );
+});
 
 $('#today').click(function() {
   $.getJSON('<?php echo base_url('index.php/logs/history/json') ?>',
