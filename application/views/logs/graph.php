@@ -14,6 +14,11 @@
   </div>
   <div class="row">
     <div class="col-xs-10">
+      <a id='last_6_hours' href='#'>letzte sechs Stunden ...</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-10">
       <a id='last_12_hours' href='#'>letzte zwölf Stunden ...</a>
     </div>
   </div>
@@ -88,11 +93,9 @@ var containerConfig = {
 };
 
 // get default data set from the server
-$.getJSON('<?php echo base_url('index.php/logs/history/json') ?>', function (seriesData) {
-  Highcharts.chart('container', $.extend(containerConfig, {series: seriesData.data}));
-});
+getData(new Date(Date.now() - (1000 * 3600 * 6)), new Date());
 
-function refreshChartWithData(dateStart, dateEnd) {
+function getData(dateStart, dateEnd) {
     $.getJSON('<?php echo base_url('index.php/logs/history/json') ?>',
     {start: dateStart.getTime(), end: dateEnd.getTime()},
     function (seriesData) {
@@ -103,6 +106,10 @@ function refreshChartWithData(dateStart, dateEnd) {
 
 var startInput = $('#datetimepicker_start').datetimepicker();
 var endInput = $('#datetimepicker_end').datetimepicker();
+
+$('#last_6_hours').click(function() {
+  getData(new Date(Date.now() - (1000 * 3600 * 6)), new Date());
+});
 
 $('#last_12_hours').click(function() {
   getData(new Date(Date.now() - (1000 * 3600 * 12)), new Date());
