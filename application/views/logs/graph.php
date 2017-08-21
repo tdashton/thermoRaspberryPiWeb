@@ -124,7 +124,7 @@ $('#today').click(function() {
 });
 
 $('#yesterday').click(function() {
-  getData(new Date(Date.now() - (Date.now() % (86400 * 1000)) - (86400 * 1000 * 2)), new Date(Date.now() - (Date.now() % (86400 * 1000)) - (86400 * 1000)));
+  getData(new Date(Date.now() - (Date.now() % (86400 * 1000)) - (86400 * 1000)), new Date(Date.now() - (Date.now() % (86400 * 1000))));
 });
 
 $('#this_day_last_week').click(function() {
