@@ -28,6 +28,18 @@ class Control_logs_model extends CI_Model {
         return;
     }
 
+    public function get_recent_values($type)
+    {
+        $this->db->select('*, count(*) as countx');
+        $this->db->from('control_logs');
+        $this->db->where('type = ', $type);
+        $this->db->group_by('param');
+        $this->db->order_by('countx desc');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     /**
      * @return array an empty array if nothing was found
      */

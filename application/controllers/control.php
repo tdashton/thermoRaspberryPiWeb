@@ -36,6 +36,7 @@ class Control extends CI_Controller {
         $src = 'db';
         if(empty($data['query'])) {
             $data['query'] = $this->getCurrentControlValues();
+            $this->setCurrentControlValues($data['query']);
             $src = 'controller';
         }
 
@@ -109,6 +110,29 @@ class Control extends CI_Controller {
     }
 
     /**
+     * returns the most frequently used settings per type
+     */
+    public function logs($type = null)
+    {
+        if (!is_null($type)) {
+            $types = [urldecode($type)];
+        } else {
+            $types = ['CMD TIME', 'CMD TEMP'];
+        }
+        foreach($types as $type) {
+            $result[$type] = array_filter(
+                $this->control_logs_model->get_recent_values($type),
+                function ($element) {
+                    return $element->countx > 2;
+                }
+            );
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
+    /**
      * reads control values from the attached contoller
      */
     private function getCurrentControlValues()
@@ -128,6 +152,14 @@ class Control extends CI_Controller {
                 'datetime' => date('Y-m-d H:i:s'),
                 );
             });
+        return $currentValues;
+    }
+
+    /**
+     * set control values from the attached contoller
+     */
+    private function setCurrentControlValues($currentValues)
+    {
         if(!empty($currentValues)) {
             // write to the database
             foreach($currentValues as $value) {
