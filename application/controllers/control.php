@@ -119,17 +119,21 @@ class Control extends CI_Controller {
         } else {
             $types = ['CMD TIME', 'CMD TEMP'];
         }
+        $result = [];
         foreach($types as $type) {
-            $result[$type] = array_filter(
-                $this->control_logs_model->get_recent_values($type),
-                function ($element) {
-                    return $element->countx > 2;
-                }
+            $result = array_merge(
+                $result,
+                array_filter(
+                    $this->control_logs_model->get_recent_values($type),
+                    function ($element) {
+                        return $element->countx > 2;
+                    }
+                )
             );
         }
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode($result));
+            ->set_output(json_encode(['result' => $result]));
     }
 
     /**

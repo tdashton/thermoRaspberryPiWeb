@@ -30,7 +30,7 @@ class Control_logs_model extends CI_Model {
 
     public function get_recent_values($type)
     {
-        $this->db->select('*, count(*) as countx');
+        $this->db->select('type, param, count(*) as countx');
         $this->db->from('control_logs');
         $this->db->where('type = ', $type);
         $this->db->group_by('param');
