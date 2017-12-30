@@ -6,14 +6,15 @@
 
 * PHP enabled webserver
 * Code Igniter (version 2.2.6 included in this repository)
-* SQL database (any CI Supported Database)
+* SQL database
 * Network access to host running the controller scripts (same subnet / host recommended)
 
 ### Config
 
-Create the appropriate config files:
+Create the appropriate config files (from the .example):
 
 <pre>
+application/config/config.php
 application/config/thermo_control.php
 application/config/database.php
 </pre>

@@ -1,5 +1,7 @@
 .DS_Store
 
+# ignore files with provided .example
+application/config/config.php
 application/config/thermopi.php
 application/config/database.php
 
