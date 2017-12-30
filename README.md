@@ -13,11 +13,11 @@
 
 Create the appropriate config files (from the .example):
 
-<pre>
-application/config/config.php
+```
+application/config/config.php (base_url and encryption_key)
 application/config/thermo_control.php
 application/config/database.php
-</pre>
+```
 
 To see how to configure them, have a look at the files in the <em>config</em> directory, both of the files exist with a <em>.example</em> extension. For more information also see the Code Igniter documentation.
 
