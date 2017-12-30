@@ -5,8 +5,8 @@
 ### Prerequisities
 
 * PHP enabled webserver
-* Code Igniter (version 2.2.1 included in this repository)
-* SQL database
+* Code Igniter (version 2.2.6 included in this repository)
+* SQL database (any CI Supported Database)
 * Network access to host running the controller scripts (same subnet / host recommended)
 
 ### Config

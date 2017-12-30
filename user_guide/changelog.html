@@ -28,7 +28,7 @@
 <div id="masthead">
 <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <tr>
-<td><h1>CodeIgniter User Guide Version 2.2.1</h1></td>
+<td><h1>CodeIgniter User Guide Version 2.2.6</h1></td>
 <td id="breadcrumb_right"><a href="./toc.html">Table of Contents Page</a></td>
 </tr>
 </table>
@@ -56,6 +56,70 @@ Change Log
 <div id="content">
 
 <h1>Change Log</h1>
+
+
+<h2>Version 2.2.6</h2>
+<p>Release Date: October 31, 2015</p>
+
+<ul>
+	<li><b>Security</b>
+		<ul>
+			<li>Fixed an XSS attack vector in <a href="libraries/security.html">Security Library</a> method <samp>xss_clean()</samp>.</li>
+			<li>Changed <a href="libraries/config.html">Config Library</a> method <samp>base_url()</samp> to fallback to ``$_SERVER['SERVER_ADDR']`` in order to avoid Host header injections.</li>
+			<li>Changed <a href="helpers/captcha_helper.html">CAPTCHA Helper</a> to try to use the operating system's PRNG first.</a>
+		</ul>
+	</li>
+</ul>
+
+<h2>Version 2.2.5</h2>
+<p>Release Date: October 8, 2015</p>
+
+<ul>
+	<li><b>Security</b>
+		<ul>
+			<li>Fixed a number of XSS attack vectors in <a href="libraries/security.html">Security Library</a> method <samp>xss_clean()</samp> (thanks to Frans Rosén from <a href="https://detectify.com/">Detectify</a>).</li>
+		</ul>
+	</li>
+</ul>
+
+<h2>Version 2.2.4</h2>
+<p>Release Date: August 20, 2015</p>
+
+<ul>
+	<li><b>Security</b>
+		<ul>
+			<li>Fixed an SQL injection vulnerability in <a href="database/active_record.html">Active Record</a> method <samp>offset()</samp>.</li>
+		</ul>
+	</li>
+</ul>
+
+<h2>Version 2.2.3</h2>
+<p>Release Date: July 14, 2015</p>
+
+<ul>
+	<li><b>Security</b>
+		<ul>
+			<li>Removed a fallback to <samp>mysql_escape_string()</samp> in the 'mysql' database driver (<samp>escape_str()</samp> method) when there's no active database connection.</li>
+		</ul>
+	</li>
+</ul>
+
+<h2>Version 2.2.2</h2>
+<p>Release Date: April 15, 2015</p>
+
+<ul>
+	<li><b>Security</b>
+		<ul>
+			<li>Added HTTP "Host" header character validation to prevent cache poisoning attacks when <kbd>base_url</kbd> auto-detection is used.</li>
+			<li>Added <kbd>FSCommand</kbd> and <kbd>seekSegmentTime</kbd> to the "evil attributes" list in <samp>CI_Security::xss_clean()</samp>.</li>
+		</ul>
+	</li>
+</ul>
+
+<h3>Bug fixes:</h3>
+<ul>
+	<li>Fixed a bug (#3665) - <samp>CI_Security::entity_decode()</samp> triggered warnings under some circumstances.</li>
+</ul>
 
 <h2>Version 2.2.1</h2>
 <p>Release Date: January 22, 2015</p>
