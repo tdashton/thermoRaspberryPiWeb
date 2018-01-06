@@ -12,7 +12,7 @@ class Control extends CI_Controller {
         $this->config->load('thermopi', false, false);
         $this->load->driver('cache', array('adapter' => 'file', 'cache_path' => '/tmp/'));
         $this->load->helper('control');
-        $this->load->model('Control_logs_model');
+        $this->load->model('control_logs_model');
     }
 
     /**
