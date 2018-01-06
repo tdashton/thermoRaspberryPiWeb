@@ -102,7 +102,7 @@ class Control extends CI_Controller {
                 $host = $this->config->item("thermo_control_host");
                 $port = $this->config->item("thermo_control_port");
                 $result = send_command($cmd, $param, $host, $port);
-                $this->cache->delete('control_values');
+                $this->cache->delete($this->getCacheKey());
                 unset($_SESSION['nonce']);
                 if (in_array($cmd, array(self::CONTROL_CMD_TEMP, self::CONTROL_CMD_TIME))) {
                     $this->control_logs_model->insert_control_value($cmd, $param);
