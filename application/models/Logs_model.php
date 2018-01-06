@@ -13,7 +13,10 @@ class Logs_model extends CI_Model {
     protected function getMapFunction()
     {
         return function ($row) {
-        $row['value'] = $row['value'] / 1000;
+            $row['value'] = $row['value'] / 1000;
+            if (isset($row['datetime'])) {
+                $row['datetime'] = strtotime($row['datetime']) * 1000;
+            }
             return $row;
         };
     }
@@ -24,11 +27,12 @@ class Logs_model extends CI_Model {
             $this->db->select('value, datetime, fk_sensor, description');
             $this->db->from('logs');
             $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
-            $this->db->where('datetime > date_sub(now(), interval 90 second)');
+            $this->db->where('datetime > ', (new \DateTime('-90 seconds'))->format('Y-m-d H:i:s'));
             $this->db->order_by('datetime', 'DESC');
             $this->db->order_by('fk_sensor', 'DESC');
             $this->db->limit(count($this->sensors));
             $query = $this->db->get();
+
             return array_map(
                 $this->getMapFunction(),
                 $query->result_array()
@@ -38,8 +42,14 @@ class Logs_model extends CI_Model {
 
     public function get_last_day_average()
     {
-        $query = $this->db->query('select s.description, avg(l.value / 1000) as average from logs l inner join sensors s 
-            on (s.name = l.fk_sensor) where datetime > date_sub(now(), interval 24 hour) group by fk_sensor order by fk_sensor');
+        $this->db->select('description, avg(value / 1000) as average');
+        $this->db->from('logs');
+        $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
+        $this->db->where('datetime > ', (new \DateTime('-24 hours'))->format('Y-m-d H:i:s'));
+        $this->db->group_by('fk_sensor');
+        $this->db->order_by('fk_sensor');
+        $query = $this->db->get();
+
         return $query->result_array();
     }
 
@@ -84,7 +94,7 @@ class Logs_model extends CI_Model {
             log_message('error', 'sensor method parameter was not set, expecting it');
             return array();
         }
-        $this->db->select('logs.value, UNIX_TIMESTAMP(logs.datetime) * 1000 as datetime');
+        $this->db->select('logs.value, logs.datetime');
         $this->db->from('logs');
         $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
         if($start && $end) {
@@ -96,6 +106,7 @@ class Logs_model extends CI_Model {
         $this->db->where('sensors.name', $sensor);
         $this->db->order_by('datetime', 'asc');
         $query = $this->db->get();
+
         return array_map(
             $this->getMapFunction(),
             $query->result_array()
