@@ -10,10 +10,18 @@ class Logs_model extends CI_Model {
         $this->sensors = $this->config->item('sensors');
     }
 
+    protected function getMapFunction()
+    {
+        return function ($row) {
+        $row['value'] = $row['value'] / 1000;
+            return $row;
+        };
+    }
+
     public function get_current($slug = false)
     {
         if ($slug === false) {
-            $this->db->select('value / 1000 as value, datetime, fk_sensor, description');
+            $this->db->select('value, datetime, fk_sensor, description');
             $this->db->from('logs');
             $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
             $this->db->where('datetime > date_sub(now(), interval 90 second)');
@@ -21,7 +29,10 @@ class Logs_model extends CI_Model {
             $this->db->order_by('fk_sensor', 'DESC');
             $this->db->limit(count($this->sensors));
             $query = $this->db->get();
-            return $query->result_array();
+            return array_map(
+                $this->getMapFunction(),
+                $query->result_array()
+            );
         }
     }
 
@@ -73,7 +84,7 @@ class Logs_model extends CI_Model {
             log_message('error', 'sensor method parameter was not set, expecting it');
             return array();
         }
-        $this->db->select('logs.value / 1000 as value, UNIX_TIMESTAMP(logs.datetime) * 1000 as datetime');
+        $this->db->select('logs.value, UNIX_TIMESTAMP(logs.datetime) * 1000 as datetime');
         $this->db->from('logs');
         $this->db->join('sensors', 'sensors.name = logs.fk_sensor');
         if($start && $end) {
@@ -85,7 +96,9 @@ class Logs_model extends CI_Model {
         $this->db->where('sensors.name', $sensor);
         $this->db->order_by('datetime', 'asc');
         $query = $this->db->get();
-        $resultArray = $query->result_array();
-        return $resultArray;
+        return array_map(
+            $this->getMapFunction(),
+            $query->result_array()
+        );
     }
 }
