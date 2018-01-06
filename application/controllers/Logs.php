@@ -4,7 +4,7 @@ class Logs extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('logs_model');
+        $this->load->model('Logs_model');
     }
 
     /**
@@ -78,7 +78,8 @@ class Logs extends CI_Controller {
         }
     }
 
-    private function getLocationName() {
+    private function getLocationName()
+    {
         $location_name = $this->input->get('location_name');
         log_message("debug", $location_name);
 

@@ -12,8 +12,7 @@ class Control extends CI_Controller {
         $this->config->load('thermopi', false, false);
         $this->load->driver('cache', array('adapter' => 'file', 'cache_path' => '/tmp/'));
         $this->load->helper('control');
-        $this->load->model('control_cache_model');
-        $this->load->model('control_logs_model');
+        $this->load->model('Control_logs_model');
     }
 
     /**
@@ -36,7 +35,8 @@ class Control extends CI_Controller {
         return 'thermoPiCache-' . md5(self::CONTROL_CMD_STATUS);
     }
 
-    public function read() {
+    public function read()
+    {
         $data = $this->cache->get($this->getCacheKey());
         $src = 'cache';
         if(!$data) {
@@ -61,7 +61,8 @@ class Control extends CI_Controller {
             ->set_output(json_encode(array("nonce" => (string)$nonce)));
     }
 
-    public function command() {
+    public function command()
+    {
         session_start();
         $this->config->load('thermopi', false, false);
 
