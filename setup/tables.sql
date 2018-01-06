@@ -1,11 +1,3 @@
-CREATE TABLE `control_cache` (
-  `type` char(16) DEFAULT NULL,
-  `param` mediumint(8) DEFAULT NULL,
-  `datetime` datetime DEFAULT NULL,
-  UNIQUE KEY `type` (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
-;
-
 CREATE TABLE `control_logs` (
   `type` char(16) DEFAULT NULL,
   `param` mediumint(8) DEFAULT NULL,

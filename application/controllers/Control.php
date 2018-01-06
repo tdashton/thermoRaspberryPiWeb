@@ -10,6 +10,7 @@ class Control extends CI_Controller {
     {
         parent::__construct();
         $this->config->load('thermopi', false, false);
+        $this->load->driver('cache', array('adapter' => 'file', 'cache_path' => '/tmp/'));
         $this->load->helper('control');
         $this->load->model('control_cache_model');
         $this->load->model('control_logs_model');
@@ -30,19 +31,23 @@ class Control extends CI_Controller {
         redirect(base_url(), 'location', 301);
     }
 
-    public function read() {
+    protected function getCacheKey()
+    {
+        return 'thermoPiCache-' . md5(self::CONTROL_CMD_STATUS);
+    }
 
-        $data['query'] = $this->control_cache_model->get_last_control_values();
-        $src = 'db';
-        if(empty($data['query'])) {
-            $data['query'] = $this->getCurrentControlValues();
-            $this->setCurrentControlValues($data['query']);
+    public function read() {
+        $data = $this->cache->get($this->getCacheKey());
+        $src = 'cache';
+        if(!$data) {
+            $data = $this->getCurrentControlValues();
+            $this->cache->save($this->getCacheKey(), $data, 60);
             $src = 'controller';
         }
 
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode(array('source' => $src, 'result' => $data['query'])));
+            ->set_output(json_encode(array('source' => $src, 'result' => $data)));
     }
 
     public function nonce()
@@ -96,7 +101,7 @@ class Control extends CI_Controller {
                 $host = $this->config->item("thermo_control_host");
                 $port = $this->config->item("thermo_control_port");
                 $result = send_command($cmd, $param, $host, $port);
-                $this->control_cache_model->flush_all_control_values();
+                $this->cache->delete('control_values');
                 unset($_SESSION['nonce']);
                 if (in_array($cmd, array(self::CONTROL_CMD_TEMP, self::CONTROL_CMD_TIME))) {
                     $this->control_logs_model->insert_control_value($cmd, $param);
@@ -156,20 +161,6 @@ class Control extends CI_Controller {
                 'datetime' => date('Y-m-d H:i:s'),
                 );
             });
-        return $currentValues;
-    }
-
-    /**
-     * set control values from the attached contoller
-     */
-    private function setCurrentControlValues($currentValues)
-    {
-        if(!empty($currentValues)) {
-            // write to the database
-            foreach($currentValues as $value) {
-                $this->control_cache_model->update_last_control_value($value['type'], $value['param']);
-            }
-        }
         return $currentValues;
     }
 
