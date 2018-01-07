@@ -4,8 +4,8 @@
 
 ### Prerequisities
 
-* PHP enabled webserver (tested with PHP 5.5.24, caveat: might not work with 7 depending on which db driver you use)
-* Code Igniter (version 2.2.6 included in this repository)
+* PHP 5 / 7 enabled webserver (tested with PHP 5.5.24 and 7.1.10)
+* Code Igniter (version 3.1.6 included in this repository)
 * SQL database
 * Network access to host running the controller scripts (same subnet / host recommended)
 
