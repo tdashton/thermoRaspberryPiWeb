@@ -55,10 +55,10 @@ class Logs extends CI_Controller {
             $start = $this->input->get('start');
             $end = $this->input->get('end');
             if($start !== false) {
-                $start = strftime('%Y/%m/%d %H:%M', $start / 1000);
+                $start = strftime('%Y-%m-%d %H:%M', $start / 1000);
             }
             if($end !== false) {
-                $end = strftime('%Y/%m/%d %H:%M', $end / 1000);
+                $end = strftime('%Y-%m-%d %H:%M', $end / 1000);
             }
         } else {
             $current = true;
