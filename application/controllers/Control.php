@@ -74,8 +74,8 @@ class Control extends CI_Controller {
         $param = $this->input->post('param');
         $signature = $this->input->post('signature');
 
-        // log_message('debug', $cmd . $param . $sharedSecret . $nonce);
-        $hash = md5($cmd . $param . $sharedSecret . $nonce);
+        // log_message('debug', $cmd . $param . $nonce);
+        $hash = hash_hmac("sha1", $cmd . $param . $nonce, $sharedSecret);
         log_message('debug', "client: $signature vs. server: $hash");
 
         $result = array(
